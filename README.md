@@ -21,7 +21,7 @@
 # 已训练模型下载
 ### https://pan.baidu.com/s/11qT4DRXIIfHVkoZdNZwOPQ 获取人脸识别模型
 ### 其余模型都在model文件中
-### 其余更小更快的mobileNet请查看arcfacemodel
+### 其余更小更快的mobileNet请查看[arcfacemodel](https://github.com/mohuazheliu/KNN-Arcface/tree/master/arcfacemodel)
 # 参考
 ### 基于ResNet的Arcface https://github.com/deepinsight/insightface
 ### MTCNN的特征点检测检测模型ONet https://github.com/blankWorld/MTCNN-Accelerate-Onet
