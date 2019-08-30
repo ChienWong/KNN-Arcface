@@ -10,24 +10,46 @@
 #include <vector>
 
 #define  PI 3.1415926
+/**
+@brief 矩阵
+*/
 struct Matrix
 {
 	int width;
 	int height;
 	float *elements;
 };
+/**
+@brief 获取矩阵元素
+@param 输入矩阵
+@param 元素所在行
+@param 元素所在列
+@return 返回元素值
+*/
 __device__ float getElement(Matrix *A, int row, int col)
 {
 	return A->elements[row * A->width + col];
 }
+/**
+@brief 设置矩阵
+@param 输入矩阵
+@param 元素所在行
+@param 元素所在列
+@param 元素值
+*/
 __device__ void setElement(Matrix *A, int row, int col, float value)
 {
 	A->elements[row * A->width + col] = value;
 }
+/**
+@brief 矩阵*向量
+@note 该方法仅适用于矩阵乘向量，block数量等于rows,threadpreblock数量等于cols
+@param 输入矩阵
+@param 输入向量
+@param 返回向量
+*/
 __global__ void matMulKernel(Matrix *A, Matrix *B, Matrix *C)
 {
-
-	//该方法仅适用于矩阵乘向量，block数量等于rows,threadpreblock数量等于cols
 	const int tid = threadIdx.x;
 	const int bid = blockIdx.x;
 	__shared__ float shared[512];
@@ -43,6 +65,12 @@ __global__ void matMulKernel(Matrix *A, Matrix *B, Matrix *C)
 		setElement(C, bid, 0, shared[0]);
 	}
 }
+/**
+@brief 计算当前特征与所有已储存特征的距离
+@param 已存储特征
+@param 当前特征
+@return 所有距离
+*/
 std::vector<float> getAllangle(std::vector<const float*> set,const float* _f) {
 	Matrix *A, *B, *C;
 	// 申请托管内存

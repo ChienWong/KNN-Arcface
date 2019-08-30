@@ -55,28 +55,66 @@ using namespace std;
 
 
 extern std::vector<float> getAllangle(std::vector<const float*> set,const float* _f);
+/**
+@brief 基于Arcface的人脸去重
+*/
 class Arcface{
 public:
+	/**
+	@brief 定义同一个人的脸
+	*/
 	struct Face {
 		cv::Point2f landmark[5];
+		/**
+		@brief 人脸集合中最好的图片的置信度，即人脸评分
+		*/
 		float confidence;
 		const float* markfeature;
 		static int count;
 		int faceid;
+		/**
+		@brief 该人脸的所有特征
+		*/
 		vector<float*> feature;
+		/**
+		@brief 人脸集合中最好的图片
+		*/
 		vector<Mat> faceimg;
 		Face() {
 			faceid = count;
 			count++;
+			if (count == INT16_MAX) count = 0;
 		}
 	};
+	//初始化网络
 	void init();
+	//测试函数,可忽略
 	float getAngle(Mat _m,Mat _n);
+	/**@brief 输入图片，后得到该图片的ID
+	@param 所输入的人脸图片
+	@return 返回人脸ID
+	*/
 	int getId(Mat m);
+	//测试函数,可忽略
 	void addFeature(Mat m);
+	/**
+	@breif 仿射变换，用于人脸矫正
+	@param 原图片
+	@param 输出图片
+	@param 原图片特征点
+	@param 目标特征点
+	*/
 	void AffineTran(Mat src, Mat& dst, const Point2f sr[], const Point2f ds[]);
+	//测试函数，可忽略
 	float getConfidence(Mat m);
+	/**
+	@brief 检测人脸是否为正脸
+	@param 需检测的人脸图片
+	*/
 	bool frontface(Mat m);
+	/**
+	@brief 保存所有已检测到的人脸
+	*/
 	std::vector<Face*> face_set;
 private:
 	Point2f standard[5];
@@ -267,7 +305,7 @@ void Arcface::Preprocess(const cv::Mat& img,std::vector<cv::Mat>* input_channels
 	int num_channels_ = input_layer->channels();
 	Size input_geometry_ = cv::Size(input_layer->width(), input_layer->height());
 	Mat mean_ = cv::Mat(input_geometry_, CV_32FC3, cv::Scalar(127, 127, 127));
-	// Convert the input image to the input image format of the network.
+	
 	cv::Mat sample;
 	if (img.channels() == 3 && num_channels_ == 1)
 		cv::cvtColor(img, sample, COLOR_BGR2GRAY);
@@ -280,31 +318,26 @@ void Arcface::Preprocess(const cv::Mat& img,std::vector<cv::Mat>* input_channels
 	else
 		sample = img;
 
-	// Convert the input image to the expected size.
+	
 	cv::Mat sample_resized;
 	if (sample.size() != input_geometry_)
 		cv::resize(sample, sample_resized, input_geometry_);
 	else
 		sample_resized = sample;
 
-	// Convert the input image to the expected number of channels.
+
 	cv::Mat sample_float;
 	if (num_channels_ == 3)
 		sample_resized.convertTo(sample_float, CV_32FC3);
 	else
 		sample_resized.convertTo(sample_float, CV_32FC1);
 
-	// Subtract the image mean to try to make the input 0-mean.
+
 	cv::Mat sample_normalized;
 	cv::subtract(sample_float, mean_, sample_normalized);
 
-	// This operation will write the separate BGR planes directly to the
-	// input layer of the network because it is wrapped by the cv::Mat
-	// objects in input_channels.
+	
 	cv::split(sample_normalized, *input_channels);
-	/*CHECK(reinterpret_cast<float*>(input_channels->at(0).data)
-	== net_->input_blobs()[0]->cpu_data())
-	<< "Input channels are not wrapping the input layer of the network.";*/
 }
 float Arcface::getAngle(Mat _m, Mat _n) {
 	NormizeAlign(_m, _m);
@@ -398,7 +431,7 @@ float* Arcface::normlize(float* _f) {
 }
 int Arcface::Face::count = 0;
 
-
+//测试函数，可忽略
 void printAngle() {
 	Arcface facediff;
 	facediff.init();
@@ -418,6 +451,7 @@ void printAngle() {
 	}
 	printf("average : %f\n", sum / (face.size() - 1));
 }
+//测试函数，可忽略
 void classify() {
 	Arcface facediff;
 	facediff.init();
@@ -471,10 +505,10 @@ void classify() {
 }
 
 int main() {
-	
 	//printAngle();
 	//classify();
-	/*Arcface facediff;
+	
+	Arcface facediff;
 	facediff.init();
 	vector<Mat> face;
 	for (int i = 0; i <= 8974; i++) {
@@ -514,7 +548,7 @@ int main() {
 	}
 	for (int i = 0; i < facediff.face_set.size(); i++) {
 		printf("category of %d is %d\n", i, facediff.face_set[i]->feature.size());
-	}*/
+	}
 	int a = 0;
 	scanf_s("%d", a);
 }
