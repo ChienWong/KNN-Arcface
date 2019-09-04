@@ -22,6 +22,11 @@
 ### https://pan.baidu.com/s/11qT4DRXIIfHVkoZdNZwOPQ 获取人脸识别模型
 ### 其余模型都在model文件中
 ### 其余更小更快的mobileNet请查看[arcfacemodel](https://github.com/mohuazheliu/KNN-Arcface/tree/master/arcfacemodel)
+# 模型训练
+### caff模型训练 请参考 https://github.com/gehaocool/CombinedMargin-caffe 
+#### 数据集格式 trainlist.txt
+##### 图片路径 图片类别 example : /home/ubuntu/face/1/1.jpg 1  
+### mxnet训练 请参考 https://github.com/deepinsight/insightface/tree/master/recognition 
 # 参考
 ### 基于ResNet的Arcface https://github.com/deepinsight/insightface
 ### MTCNN的特征点检测检测模型ONet https://github.com/blankWorld/MTCNN-Accelerate-Onet
